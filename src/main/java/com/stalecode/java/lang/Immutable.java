@@ -1,4 +1,4 @@
-package com.stalecode.core.value;
+package com.stalecode.java.lang;
 
 import static java.util.Optional.ofNullable;
 
@@ -6,17 +6,20 @@ import java.io.Serializable;
 
 import com.stalecode.core.validate.ArgumentExceptionMessage;
 
-@Deprecated
-public class Immutable<T> implements Serializable {
+public class Immutable<T extends Comparable<T>> implements Serializable, Comparable<Immutable<T>> {
 
-	private static final long serialVersionUID = 1515846095597584292L;
+	private static final long serialVersionUID = -6458577753960520489L;
 
 	private final T value;
 
 	protected Immutable(final T value) {
-		this.value = ofNullable(value).orElseThrow(
-				// Delay instantiation of exception message until needed
-				() -> ArgumentExceptionMessage.valueOf("Immutable value required").toException());
+		this.value = ofNullable(value)
+				.orElseThrow(() -> ArgumentExceptionMessage.valueOf("Immutable value required").toException());
+	}
+
+	@Override
+	public int compareTo(final Immutable<T> o) {
+		return getValue().compareTo(o.getValue());
 	}
 
 	@Override
@@ -26,10 +29,8 @@ public class Immutable<T> implements Serializable {
 			result = false;
 		} else if (obj == this) {
 			result = true;
-		} else if (obj.getClass().equals(getClass())) {
-			result = ((Immutable<?>) obj).getValue().equals(getValue());
 		} else {
-			result = false;
+			result = obj.getClass().equals(getClass()) ? ((Immutable<?>) obj).getValue().equals(getValue()) : false;
 		}
 		return result;
 	}

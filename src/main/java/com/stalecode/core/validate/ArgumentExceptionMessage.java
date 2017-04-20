@@ -2,6 +2,7 @@ package com.stalecode.core.validate;
 
 import com.stalecode.core.java.lang.ExceptionMessage;
 
+@Deprecated
 public class ArgumentExceptionMessage extends ExceptionMessage<IllegalArgumentException> {
 
 	public static ArgumentExceptionMessage DEFAULT = valueOf("Legal argument required");
